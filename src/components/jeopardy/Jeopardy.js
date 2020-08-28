@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 //import our service
 import JeopardyService from "../../services/jeopardyServices/JeopardyService";
+import JeopardyDisplay from "../jeopardyDisplay/JeopardyDisplay"
 
 class Jeopardy extends Component {
     //set our initial state and set up our service as this.client on this component
@@ -30,17 +31,18 @@ class Jeopardy extends Component {
 
     updateScore = (event) => {
         event.preventDefault()
-        
-        if (this.state.answer === this.state.data.answer) {
+        let dataAnswer = (this.state.data.answer).toLowerCase()
+        let userAnswer = (this.state.answer).toLowerCase()
+        if (dataAnswer === userAnswer) {
             this.setState((state, props) => ({
-                score: state.score += state.data.value,
+                score: state.score + state.data.value,
                 answer: ''
             }))
         }
             
         else {
             this.setState((state, props) => ({
-                score: state.score -= state.data.value,
+                score: state.score - state.data.value,
                 answer: ''
             }))
         }
@@ -56,27 +58,14 @@ class Jeopardy extends Component {
     }
 
     //display the results on the screen
+    
     render() {
-        let category = 'loading'
-
-        if (this.state.data.category) {
-            category = this.state.data.category.title
-        }
-
-        return (
-            <div>
-                <strong>Score: </strong> {this.state.score} <br />
-                <strong>Question: </strong>{this.state.data.question} <br />
-                <strong>Value: </strong>{this.state.data.value} <br />
-                <strong>Category: </strong>{category} <br />
-                <strong>Answer: </strong>{this.state.data.answer}
-                <form className="answerForm" onSubmit={this.updateScore}>
-                    <input className='answerBox' type="text" placeholder='enter answer here' value={this.state.answer} onChange={this.handleChange} />
-                    <button className='submit'>Submit</button>
-                </form>
-
+        return(
+            <div className='jeopardyDisplay'>
+                <JeopardyDisplay category ={this.state.data.category} data={this.state.data} score={this.state.score} answer={this.state.answer} updateScore={this.updateScore} handleChange={this.handleChange}/>
             </div>
-        );
+        )
+        
     }
 }
 
